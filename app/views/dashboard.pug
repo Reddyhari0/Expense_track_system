@@ -20,7 +20,35 @@ html(lang="en")
             h3.fw-bold.mb-0= totals.count
       .card
         .card-body.p-4
-          h4.fw-bold.mb-3 Transactions
+          .d-flex.justify-content-between.align-items-center.mb-3
+            h4.fw-bold.mb-0 Transactions
+            span.badge.rounded-pill.badge-soft= expenses.length + ' results'
+          form.row.g-2.align-items-end.mb-4(method="get", action="/dashboard")
+            .col-lg-3.col-sm-6
+              label.form-label.small(for="search") Search
+              input#search.form-control(type="search", name="search", value=filters.search, placeholder="Title, category…")
+            .col-lg-2.col-sm-6
+              label.form-label.small(for="category") Category
+              select#category.form-select(name="category")
+                option(value="") All categories
+                each item in categories
+                  option(value=item.id, selected=String(filters.category) === String(item.id))= item.name
+            .col-lg-2.col-sm-6
+              label.form-label.small(for="from") From
+              input#from.form-control(type="date", name="from", value=filters.from)
+            .col-lg-2.col-sm-6
+              label.form-label.small(for="to") To
+              input#to.form-control(type="date", name="to", value=filters.to)
+            .col-lg-1.col-sm-6
+              label.form-label.small(for="min") Min £
+              input#min.form-control(type="number", name="min", min="0", step="0.01", value=filters.min)
+            .col-lg-1.col-sm-6
+              label.form-label.small(for="max") Max £
+              input#max.form-control(type="number", name="max", min="0", step="0.01", value=filters.max)
+            .col-lg-1.d-grid
+              button.btn.btn-success(type="submit") Go
+            .col-12
+              a.small.text-secondary(href="/dashboard") Clear filters
           if expenses.length
             .table-responsive
               table.table.align-middle

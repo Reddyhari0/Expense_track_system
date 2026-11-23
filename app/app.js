@@ -31,13 +31,28 @@ app.get("/register", function(req, res) {
 app.get("/dashboard", async function(req, res) {
     try {
         const categories = await db.query('SELECT id,name,color FROM expense_categories ORDER BY name');
+        const conditions = ['1=1'];
+        const params = [];
+        if (req.query.search) {
+            conditions.push('(e.title LIKE ? OR c.name LIKE ? OR u.full_name LIKE ?)');
+            const search = `%${req.query.search}%`;
+            params.push(search, search, search);
+        }
+        if (req.query.category) { conditions.push('e.category_id = ?'); params.push(req.query.category); }
+        if (req.query.from) { conditions.push('e.spent_on >= ?'); params.push(req.query.from); }
+        if (req.query.to) { conditions.push('e.spent_on <= ?'); params.push(req.query.to); }
+        if (req.query.min) { conditions.push('e.amount >= ?'); params.push(req.query.min); }
+        if (req.query.max) { conditions.push('e.amount <= ?'); params.push(req.query.max); }
+        const where = conditions.join(' AND ');
         const expenses = await db.query(`SELECT e.id,e.title,e.amount,e.spent_on,
             c.name AS category,c.color,u.full_name FROM expenses e
             JOIN expense_categories c ON c.id=e.category_id
-            JOIN app_users u ON u.id=e.user_id ORDER BY e.spent_on DESC,e.id DESC`);
-        const totals = await db.query(`SELECT COALESCE(SUM(amount),0) AS spent,COUNT(*) AS count
-            FROM expenses`);
-        res.render('dashboard', { title: 'Dashboard | Pennywise', expenses, categories, totals: totals[0] });
+            JOIN app_users u ON u.id=e.user_id WHERE ${where}
+            ORDER BY e.spent_on DESC,e.id DESC`, params);
+        const totals = await db.query(`SELECT COALESCE(SUM(e.amount),0) AS spent,COUNT(*) AS count
+            FROM expenses e JOIN expense_categories c ON c.id=e.category_id
+            JOIN app_users u ON u.id=e.user_id WHERE ${where}`, params);
+        res.render('dashboard', { title: 'Dashboard | Pennywise', expenses, categories, totals: totals[0], filters: req.query });
     } catch (error) {
         console.error(error);
         res.status(500).send('Dashboard data is unavailable. Check that the database is running and configured.');
