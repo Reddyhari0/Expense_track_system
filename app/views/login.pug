@@ -1,0 +1,32 @@
+doctype html
+html(lang="en")
+  include _head.pug
+  body
+    include _nav.pug
+    main.container.py-5(style="max-width:1100px")
+      .row.g-0.overflow-hidden.bg-white.rounded-4.shadow-sm
+        .col-lg-6.p-4.p-md-5
+          a.small.text-success.text-decoration-none(href="/") ← Back to home
+          p.text-success.text-uppercase.small.fw-bold.mt-5.mb-2 Welcome back
+          h1.fw-bold Sign in to Pennywise
+          p.text-secondary.mb-4 Your financial overview is ready when you are.
+          form(action="#", method="get")
+            .mb-3
+              label.form-label(for="email") Email address
+              input#email.form-control.form-control-lg(type="email", placeholder="you@example.com", autocomplete="email")
+            .mb-3
+              .d-flex.justify-content-between
+                label.form-label(for="password") Password
+                a.small.text-success(href="#") Forgot password?
+              input#password.form-control.form-control-lg(type="password", placeholder="Enter your password", autocomplete="current-password")
+            .form-check.mb-4
+              input#remember.form-check-input(type="checkbox")
+              label.form-check-label(for="remember") Remember me
+            button.btn.btn-success.btn-lg.w-100.rounded-pill(type="button") Sign in
+          p.text-center.mt-4.mb-0.small.text-secondary New to Pennywise? #[a.text-success(href="/register") Create an account]
+        .col-lg-6.d-none.d-lg-flex.align-items-end.p-5.text-white(style="background:linear-gradient(145deg,#557b50,#253b2e);min-height:600px")
+          div
+            span.display-4 “
+            h2.fw-bold A good plan starts with knowing where you stand.
+            p.mb-0.opacity-75 A clear view for the choices ahead.
+    include _scripts.pug

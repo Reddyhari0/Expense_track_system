@@ -1,0 +1,33 @@
+doctype html
+html(lang="en")
+  include _head.pug
+  body
+    include _nav.pug
+    main.container.py-5(style="max-width:1100px")
+      .row.g-0.overflow-hidden.bg-white.rounded-4.shadow-sm
+        .col-lg-6.d-none.d-lg-flex.align-items-end.p-5.text-white(style="background:linear-gradient(145deg,#91ad75,#426243);min-height:640px")
+          div
+            p.text-uppercase.small.fw-bold.opacity-75 A fresh start
+            h2.display-5.fw-bold Make space for what matters.
+            p.opacity-75 Bring your everyday spending into focus.
+        .col-lg-6.p-4.p-md-5
+          a.small.text-success.text-decoration-none(href="/") ← Back to home
+          p.text-success.text-uppercase.small.fw-bold.mt-4.mb-2 Get started
+          h1.fw-bold Create your account
+          p.text-secondary.mb-4 A few details and you’re on your way.
+          form(action="#", method="get")
+            .mb-3
+              label.form-label(for="name") Full name
+              input#name.form-control(type="text", placeholder="Your name", autocomplete="name")
+            .mb-3
+              label.form-label(for="email") Email address
+              input#email.form-control(type="email", placeholder="you@example.com", autocomplete="email")
+            .mb-3
+              label.form-label(for="password") Password
+              input#password.form-control(type="password", placeholder="At least 8 characters", autocomplete="new-password")
+            .form-check.mb-4
+              input#terms.form-check-input(type="checkbox")
+              label.form-check-label.small(for="terms") I agree to the terms and privacy policy.
+            button.btn.btn-success.btn-lg.w-100.rounded-pill(type="button") Create account
+          p.text-center.mt-4.mb-0.small.text-secondary Already registered? #[a.text-success(href="/login") Sign in]
+    include _scripts.pug

@@ -19,6 +19,14 @@ app.get("/", function(req, res) {
     res.render("index", { title: "Pennywise | Spend with clarity" });
 });
 
+// Sign in and account registration screens
+app.get("/login", function(req, res) {
+    res.render("login", { title: "Sign in | Pennywise" });
+});
+app.get("/register", function(req, res) {
+    res.render("register", { title: "Create account | Pennywise" });
+});
+
 // Start server on port 3000
 app.listen(3000,function(){
     console.log(`Server running at http://127.0.0.1:3000/`);

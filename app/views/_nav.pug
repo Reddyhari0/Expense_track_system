@@ -1,0 +1,11 @@
+nav.navbar.navbar-expand-lg.bg-white.border-bottom.sticky-top
+  .container-fluid.px-lg-4.py-2
+    a.navbar-brand.fw-bold(href="/")
+      span.text-success.me-2 ◉
+      | pennywise
+    button.navbar-toggler(type="button", data-bs-toggle="collapse", data-bs-target="#appNav")
+      span.navbar-toggler-icon
+    #appNav.collapse.navbar-collapse
+      ul.navbar-nav.me-auto.ms-lg-4.gap-lg-2
+        li.nav-item: a.nav-link(href="/dashboard") Overview
+      a.btn.btn-outline-success.btn-sm.rounded-pill.px-3(href="/login") Sign in
