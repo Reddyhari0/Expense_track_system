@@ -1,0 +1,34 @@
+doctype html
+html(lang="en")
+  include _head.pug
+  body
+    include _nav.pug
+    main.container.py-5(style="max-width:900px")
+      a.small.text-success.text-decoration-none(href="/dashboard") ← Back to dashboard
+      .d-flex.flex-wrap.justify-content-between.align-items-start.gap-3.mt-4.mb-4
+        div
+          p.text-success.text-uppercase.small.fw-bold.mb-2 Transaction detail
+          h1.fw-bold= expense.title
+          span.badge.rounded-pill(style='background-color:' + expense.color + '20;color:' + expense.color)= expense.category
+        h2.fw-bold.mb-0 £#{Number(expense.amount).toLocaleString('en-GB', {minimumFractionDigits:2,maximumFractionDigits:2})}
+      .card: .card-body.p-4.p-md-5
+        .d-flex.justify-content-between.align-items-center.border-bottom.pb-3.mb-4
+          span.small.text-secondary Transaction reference
+          span.small.fw-semibold= 'EXP-' + String(expense.id).padStart(5, '0')
+        .row.g-4
+          .col-md-6
+            p.small.text-secondary.mb-1 Date
+            p.fw-semibold= new Date(expense.spent_on).toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})
+          .col-md-6
+            p.small.text-secondary.mb-1 Payment method
+            p.fw-semibold= expense.payment_method
+          .col-md-6
+            p.small.text-secondary.mb-1 Transaction type
+            p.fw-semibold Expense
+          .col-md-6
+            p.small.text-secondary.mb-1 Recorded by
+            p.fw-semibold.mb-0= expense.full_name
+            p.small.text-secondary= expense.email
+          .col-md-6
+            p.small.text-secondary.mb-1 Notes
+            p.fw-semibold= expense.notes || 'No notes provided'

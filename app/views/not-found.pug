@@ -1,0 +1,10 @@
+doctype html
+html(lang="en")
+  include _head.pug
+  body
+    include _nav.pug
+    main.container.py-5.text-center
+      p.text-success.text-uppercase.small.fw-bold Record unavailable
+      h1.fw-bold= title
+      p.text-secondary The record may have been removed or the link is incorrect.
+      a.btn.btn-success.rounded-pill.px-4(href="/dashboard") Return to dashboard

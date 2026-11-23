@@ -61,7 +61,7 @@ html(lang="en")
                   each expense in expenses
                     tr
                       td
-                        span.fw-semibold= expense.title
+                        a.fw-semibold.text-dark.text-decoration-none(href='/expenses/' + expense.id)= expense.title
                         div.small.text-secondary= expense.full_name
                       td
                         span.badge.rounded-pill(style='background-color:' + expense.color + '20;color:' + expense.color)= expense.category

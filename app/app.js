@@ -59,6 +59,21 @@ app.get("/dashboard", async function(req, res) {
     }
 });
 
+// Expense detail page
+app.get("/expenses/:id", async function(req, res) {
+    try {
+        const rows = await db.query(`SELECT e.id,e.title,e.amount,e.spent_on,e.payment_method,e.notes,
+            c.name AS category,c.color,u.full_name,u.email FROM expenses e
+            JOIN expense_categories c ON c.id=e.category_id
+            JOIN app_users u ON u.id=e.user_id WHERE e.id=?`, [req.params.id]);
+        if (!rows.length) return res.status(404).render('not-found', { title: 'Expense not found' });
+        res.render('detail', { title: `${rows[0].title} | Pennywise`, expense: rows[0] });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Expense details are unavailable.');
+    }
+});
+
 // Start server on port 3000
 app.listen(3000,function(){
     console.log(`Server running at http://127.0.0.1:3000/`);
