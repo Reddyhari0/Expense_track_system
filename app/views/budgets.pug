@@ -1,0 +1,19 @@
+doctype html
+html(lang="en")
+  include _head.pug
+  body
+    include _nav.pug
+    main.container.py-5(style="max-width:1000px")
+      p.text-success.text-uppercase.small.fw-bold.mb-1 Monthly plan
+      h1.fw-bold Budgets
+      p.text-secondary.mb-4 Current-month category limits and recorded spending.
+      .card: .card-body.p-4
+        each budget in budgets
+          - var percent = Math.min(100, budget.amount ? (Number(budget.used) / Number(budget.amount) * 100) : 0)
+          .py-3.border-bottom
+            .d-flex.justify-content-between.align-items-center.mb-2
+              span.fw-semibold= budget.name
+              span.small £#{Number(budget.used).toLocaleString('en-GB')} of £#{Number(budget.amount).toLocaleString('en-GB')}
+            .progress(style="height:8px")
+              .progress-bar(style='width:' + percent + '%;background-color:' + budget.color)
+            p.small.text-secondary.mt-2.mb-0= Math.round(percent) + '% of budget used'

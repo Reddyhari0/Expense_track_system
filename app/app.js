@@ -52,7 +52,11 @@ app.get("/dashboard", async function(req, res) {
         const totals = await db.query(`SELECT COALESCE(SUM(e.amount),0) AS spent,COUNT(*) AS count
             FROM expenses e JOIN expense_categories c ON c.id=e.category_id
             JOIN app_users u ON u.id=e.user_id WHERE ${where}`, params);
-        res.render('dashboard', { title: 'Dashboard | Pennywise', expenses, categories, totals: totals[0], filters: req.query });
+        const budgetRows = await db.query(`SELECT b.amount,c.name,c.color,
+            COALESCE(SUM(CASE WHEN e.spent_on >= b.month_start AND e.spent_on < DATE_ADD(b.month_start,INTERVAL 1 MONTH) THEN e.amount ELSE 0 END),0) AS used
+            FROM budgets b JOIN expense_categories c ON c.id=b.category_id
+            LEFT JOIN expenses e ON e.category_id=c.id GROUP BY b.id,c.name,c.color,b.amount ORDER BY c.name`);
+        res.render('dashboard', { title: 'Dashboard | Pennywise', expenses, categories, totals: totals[0], budgets: budgetRows, filters: req.query });
     } catch (error) {
         console.error(error);
         res.status(500).send('Dashboard data is unavailable. Check that the database is running and configured.');
@@ -83,6 +87,17 @@ app.get("/categories", async function(req, res) {
             GROUP BY c.id,c.name,c.color ORDER BY c.name`);
         res.render('categories', { title: 'Categories | Pennywise', categories: categoryRows });
     } catch (error) { console.error(error); res.status(500).send('Categories are unavailable.'); }
+});
+
+// Monthly budget overview
+app.get("/budgets", async function(req, res) {
+    try {
+        const budgetRows = await db.query(`SELECT c.name,c.color,b.amount,
+            COALESCE(SUM(CASE WHEN e.spent_on >= b.month_start AND e.spent_on < DATE_ADD(b.month_start,INTERVAL 1 MONTH) THEN e.amount ELSE 0 END),0) AS used
+            FROM budgets b JOIN expense_categories c ON c.id=b.category_id
+            LEFT JOIN expenses e ON e.category_id=c.id GROUP BY b.id,c.name,c.color,b.amount ORDER BY c.name`);
+        res.render('budgets', { title: 'Budgets | Pennywise', budgets: budgetRows });
+    } catch (error) { console.error(error); res.status(500).send('Budgets are unavailable.'); }
 });
 
 app.listen(3000,function(){
