@@ -75,6 +75,16 @@ app.get("/expenses/:id", async function(req, res) {
 });
 
 // Start server on port 3000
+// Category overview
+app.get("/categories", async function(req, res) {
+    try {
+        const categoryRows = await db.query(`SELECT c.id,c.name,c.color,COUNT(e.id) AS expense_count,
+            COALESCE(SUM(e.amount),0) AS total FROM expense_categories c LEFT JOIN expenses e ON e.category_id=c.id
+            GROUP BY c.id,c.name,c.color ORDER BY c.name`);
+        res.render('categories', { title: 'Categories | Pennywise', categories: categoryRows });
+    } catch (error) { console.error(error); res.status(500).send('Categories are unavailable.'); }
+});
+
 app.listen(3000,function(){
     console.log(`Server running at http://127.0.0.1:3000/`);
 });

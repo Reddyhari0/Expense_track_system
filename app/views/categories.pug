@@ -1,0 +1,18 @@
+doctype html
+html(lang="en")
+  include _head.pug
+  body
+    include _nav.pug
+    main.container.py-5
+      p.text-success.text-uppercase.small.fw-bold.mb-1 Expense overview
+      h1.fw-bold Categories
+      p.text-secondary.mb-4 Browse spend grouped by category.
+      .row.g-3
+        each category in categories
+          .col-md-6.col-xl-4
+            .card.h-100: .card-body.p-4
+              .d-flex.justify-content-between
+                span.badge.rounded-pill(style='background-color:' + category.color + '20;color:' + category.color)= category.name
+                span.small.text-secondary= category.expense_count + ' transactions'
+              h3.fw-bold.mt-4.mb-1 £#{Number(category.total).toLocaleString('en-GB', {minimumFractionDigits:2,maximumFractionDigits:2})}
+              p.small.text-secondary.mb-0 Total recorded spending
