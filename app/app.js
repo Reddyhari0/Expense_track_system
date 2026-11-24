@@ -100,6 +100,16 @@ app.get("/budgets", async function(req, res) {
     } catch (error) { console.error(error); res.status(500).send('Budgets are unavailable.'); }
 });
 
+// Spending report grouped by category
+app.get("/reports", async function(req, res) {
+    try {
+        const reportRows = await db.query(`SELECT c.name AS category,c.color,COUNT(e.id) AS count,
+            COALESCE(SUM(e.amount),0) AS total FROM expense_categories c LEFT JOIN expenses e ON e.category_id=c.id
+            GROUP BY c.id,c.name,c.color ORDER BY total DESC`);
+        res.render('reports', { title: 'Reports | Pennywise', reports: reportRows });
+    } catch (error) { console.error(error); res.status(500).send('Reports are unavailable.'); }
+});
+
 app.listen(3000,function(){
     console.log(`Server running at http://127.0.0.1:3000/`);
 });

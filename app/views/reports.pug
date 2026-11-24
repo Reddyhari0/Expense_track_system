@@ -1,0 +1,28 @@
+doctype html
+html(lang="en")
+  include _head.pug
+  body
+    include _nav.pug
+    main.container.py-5(style="max-width:1000px")
+      p.text-success.text-uppercase.small.fw-bold.mb-1 Spending insights
+      h1.fw-bold Reports
+      p.text-secondary.mb-4 See how your spending is distributed across categories.
+      .card: .card-body.p-4
+        .table-responsive
+          table.table.align-middle.mb-0
+            thead: tr
+              th Category
+              th Transactions
+              th.text-end Total spent
+              th(style="width:30%") Share
+            tbody
+              - var overall = reports.reduce((sum, row) => sum + Number(row.total), 0)
+              each row in reports
+                - var percent = overall ? Number(row.total) / overall * 100 : 0
+                tr
+                  td: span.badge.rounded-pill(style='background-color:' + row.color + '20;color:' + row.color)= row.category
+                  td= row.count
+                  td.text-end.fw-semibold £#{Number(row.total).toLocaleString('en-GB', {minimumFractionDigits:2,maximumFractionDigits:2})}
+                  td
+                    .progress(style="height:7px")
+                      .progress-bar(style='width:' + percent + '%;background-color:' + row.color)
